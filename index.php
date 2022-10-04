@@ -12,15 +12,32 @@
 <script>
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
-            console.log(position.coords.latitude);
-            console.log(position.coords.longitude);
-            fetch('https://api-adresse.data.gouv.fr/reverse/?lon=' + position.coords.longitude + '&lat=' + position.coords.latitude)
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+
+            // Find city
+
+            // const url = `https://api-adresse.data.gouv.fr/reverse/?lon=${lng}&lat=${lat}`;
+            // fetch(url)
+            //     .then(response => response.json())
+            //     .then(data => {
+            //         localStorage.setItem('city', data.features[0].properties.city);
+            //     })
+            //     .catch(error => console.error(error));
+
+            // Find region
+            const url2 = `https://geo.api.gouv.fr/regions?lat=${lat}&lon=${lng}`;
+            fetch(url2)
                 .then(response => response.json())
-                .then(data => localStorage.setItem('city', data.features[0].properties.city))
+                .then(data => {
+                    localStorage.setItem('region', data[0].nom);
+                })
+                .catch(error => console.error(error));
         });
         } else {
         console.log("La géolocalisation n'est pas supportée par votre navigateur");
     }
+    console.log(localStorage.getItem('region'));
 </script>
 </body>
 </html>
